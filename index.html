@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+	<head>
+		<!-- Include Bootstrap -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/superhero/bootstrap.min.css">
+		<script>
+		
+		var nflTeams = ["Arizona Cardinals",
+		"Atlanta Falcons",
+		"Baltimore Ravens",
+		"Buffalo Bills",
+		"Carolina Panthers",
+		"Chicago Bears",
+		"Cincinnati Bengals", 
+		"Cleveland Browns",
+		"Dallas Cowboys", 
+		"Denver Broncos",
+		"Detroit Lions", 
+		"Green Bay Packers", 
+		"Houston Texans",
+		"Indianapolis Colts",
+		"Jacksonville Jaguars", 
+		"Kansas City Chiefs", 
+		"Miami Dolphins", 
+		"Minnesotta Vikings", 
+		"New England Patriots",
+		"New Orleans Saints", 
+		"New York Giants",
+		"New York Jets", 
+		"Oakland Raiders",
+		"Philadelphia Eagles",
+		"Pittsburgh Steelers", 
+		"San Diego Chargers", 
+		"San Francisco 49ers", 
+		"Seattle Seahawks", 
+		"St.Louis Rams",
+		"Tampa Bay Buccaneers", 
+		"Tennessee Titans", 
+		"Washington Redskins"
+	];
+
+		var nflAbb = [ "ARI",
+		"ATL",
+		"BAL",
+		"BUF",
+		"CAR",
+		"CHI",
+		"CIN",
+		"CLE",
+		"DAL",
+		"DEN",
+		"DET",
+		"GB",
+		"HOU",
+		"IND",
+		"JAX",
+		"KC",
+		"MIA",
+		"MIN",
+		"NE",
+		"NO",
+		"NYG",
+		"NYJ",
+		"OAK",	
+		"PHI",
+		"PIT",
+		"SD",
+		"SEA",
+		"SF",
+		"STL",
+		"TB",
+		"TEN",
+		"WAS"
+	];
+			
+		function loadLists() {
+			document.getElementById('ten').style.display='none';
+			document.getElementById('search').style.display='none';
+			document.getElementById('player').style.display='none';
+			document.getElementById('results').style.display='block';
+			document.getElementById('gamelists').style.display='none';
+			document.getElementById('stats').style.display='none';
+		
+		
+			var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange=function() {
+ 				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+    				 document.getElementById("results").innerHTML=xmlhttp.responseText;
+    			}
+			}
+  			xmlhttp.open("GET","test.php?q=sched",true);
+  			xmlhttp.send();
+  			return false;
+		};
+		
+		function searchPlayer() {
+			var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange=function() {
+    			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+     				 document.getElementById("results").innerHTML=xmlhttp.responseText;
+    			}
+  			}
+  			xmlhttp.open("GET","test.php?q=player&p="+document.getElementById("searchString").value,true);
+  			xmlhttp.send();
+  			return false;
+		};
+	
+		function searchTeam() {
+			var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange=function() {
+    			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+     				 document.getElementById("results").innerHTML=xmlhttp.responseText;
+    			}
+  			}
+  			xmlhttp.open("GET","test.php?q=team&t="+document.getElementById("searchString").value,true);
+  			xmlhttp.send();
+		};
+		
+		function loadLeaders() {
+
+			var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange=function() {
+    			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+     				 document.getElementById("results").innerHTML=xmlhttp.responseText;
+    			}
+  			}
+  			xmlhttp.open("GET","test.php?q=leaders&p="+document.getElementById("topTen").value,true);
+  			xmlhttp.send();
+		};
+		
+		function addGame (){
+			var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange=function() {
+    			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+     				 document.getElementById("results").innerHTML=xmlhttp.responseText;
+    			}
+  			}
+  			var query = "test.php?q=addgame";
+  			query += "&ht=" + document.getElementById("hteam").value; //HOME TEAM
+  			query += "&hs=" + document.getElementById("hscore").value; //HOME SCORE
+  			query += "&w=" + document.getElementById("week").value;		//WEEK NUMBER
+  			query += "&at=" + document.getElementById("ateam").value; //AWAY TEAM
+  			query += "&as=" + document.getElementById("ascore").value; //AWAY SCORE
+  			query += "&d=" + document.getElementById("date").value; //GAME DATE
+  			xmlhttp.open("POST",query,true);
+  			xmlhttp.send();		
+		};
+		
+		function displaySearch(){
+		document.getElementById('gamelists').style.display='none';
+		document.getElementById('ten').style.display='none';
+		document.getElementById('player').style.display='none';
+		document.getElementById('results').style.display='block';
+		document.getElementById('search').style.display='block';
+		document.getElementById("compareResults").style.display='none';
+		document.getElementById('stats').style.display='none';
+	};
+		
+		function displayLeaders(){
+		document.getElementById('gamelists').style.display='none';
+		document.getElementById('search').style.display='none';
+		document.getElementById('player').style.display='none';
+		document.getElementById('results').style.display='block';
+		document.getElementById('ten').style.display='block';
+		document.getElementById("compareResults").style.display='none';
+		document.getElementById('stats').style.display='none';
+	};
+		
+		function displayAddGame() {
+		document.getElementById('search').style.display='none';
+		document.getElementById('ten').style.display='none';
+		document.getElementById('player').style.display='none';
+		document.getElementById('results').style.display='block';
+		document.getElementById('gamelists').style.display='block';
+		document.getElementById("compareResults").style.display='none';
+		document.getElementById('stats').style.display='none';
+		
+		var text = "<form class='form-inline'> <select id='hteam' class='form-control'>";
+		text+= "<option selected disabled>Choose Home Team</option>";
+    	for (i=0;i<nflTeams.length;i++){
+    		text += ("<option value="+nflAbb[i]+">" + nflTeams[i] + "</option>");
+   		}
+   		text += "</select> ";
+   		text += "<select id='ateam' class='form-control'>";
+		text += "<option selected disabled>Choose Away Team</option>";
+   		for (i=0;i<nflTeams.length;i++){
+       		text += ("<option value="+nflAbb[i]+">" + nflTeams[i] + "</option>");
+   		}
+   		text += "</select> ";
+   		text += "<select id='week' class='form-control'>";
+		text += "<option selected disabled>Choose Week Number</option>";
+   		for (i=1;i<18;i++){
+       		text += ("<option value="+i+">"+ i +"</option>");
+   		}
+   		text += "</select><br><br></form>";
+   		text += "<form class='form-inline'><input type='text' class='form-control' value='' id='hscore' placeholder='Home Score'></input> ";
+   		text += "<input type='number' class='form-control' value='' id='ascore' placeholder='Away Score'></input> ";
+   		text += "<input type='text' class='form-control' value='' id='date' placeholder='Game Date'></input> ";
+   		text += "<br><br><button type='button' class='btn btn-info' onclick='addGame()'><span class='glyphicon glyphicon-plus-sign'></span>  Add Game</button></form>";
+   		document.getElementById('gamelists').innerHTML = text;
+		};
+		
+		function updatePlayer() {
+			var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange=function() {
+    			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+     				 document.getElementById("results").innerHTML=xmlhttp.responseText;
+    			}
+  			}
+  			
+  			var query = "test.php?q=updateplayer";
+  			query += "&n="+document.getElementById("playernumber").value;
+  			query += "&t="+document.getElementById("teamList").value;
+  			query += "&p="+document.getElementById("playerPosition").value;
+  			
+  			switch (document.getElementById("playerPosition").value) {
+  				case "pass":
+  					query += "&s="+document.getElementById("attempts").value;//ALL STATS, SEP BY - SPECIFIC TO PASS
+  					query += "-"+document.getElementById("completions").value;
+  					query += "-"+document.getElementById("percentage").value;
+  					query += "-"+document.getElementById("yards").value;
+  					query += "-"+document.getElementById("ypa").value;
+  					query += "-"+document.getElementById("tds").value;
+  					query += "-"+document.getElementById("ints").value;
+  					query += "-"+document.getElementById("sacks").value;
+  					query += "-"+document.getElementById("rating").value;
+  					break;
+  				case "rush":
+  					query += "&s="+document.getElementById("attempts").value;//ALL STATS, SEP BY - SPECIFIC TO RUSH
+  					query += "-"+document.getElementById("yards").value;
+  					query += "-"+document.getElementById("avg").value;
+  					query += "-"+document.getElementById("ypg").value;
+  					query += "-"+document.getElementById("long").value;
+  					query += "-"+document.getElementById("tds").value;
+  					query += "-"+document.getElementById("fumbles").value;
+  					break;
+  				case "rec":
+  					query += "&s="+document.getElementById("receptions").value;//ALL STATS, SEP BY - SPECIFIC TO RUSH
+  					query += "-"+document.getElementById("yards").value;
+  					query += "-"+document.getElementById("avg").value;
+  					query += "-"+document.getElementById("ypg").value;
+  					query += "-"+document.getElementById("tds").value;
+  					query += "-"+document.getElementById("long").value;
+  					query += "-"+document.getElementById("fumbles").value;
+  					break;
+  				case "def":
+  					query += "&s="+document.getElementById("tackles").value;//ALL STATS, SEP BY - SPECIFIC TO RUSH
+  					query += "-"+document.getElementById("atackles").value;
+  					query += "-"+document.getElementById("ints").value;
+  					query += "-"+document.getElementById("intYards").value;
+  					query += "-"+document.getElementById("tds").value;
+  					query += "-"+document.getElementById("sack").value;
+  					query += "-"+document.getElementById("ffumbles").value;
+  					break;
+  				case "kick":
+  					query += "&s="+document.getElementById("pct").value;//ALL STATS, SEP BY - SPECIFIC TO RUSH
+  					query += "-"+document.getElementById("pat").value;
+  					query += "-"+document.getElementById("fgs").value;
+  					query += "-"+document.getElementById("xshort").value;
+  					query += "-"+document.getElementById("short").value;
+  					query += "-"+document.getElementById("med").value;
+  					query += "-"+document.getElementById("long").value;
+  					query += "-"+document.getElementById("xlong").value;
+  					break;
+  			}
+  			xmlhttp.open("POST",query,true);
+  			xmlhttp.send();	
+		}
+		
+		function loadUpdatePlayer(){
+			document.getElementById('gamelists').style.display='none';
+			document.getElementById('ten').style.display='none';
+			document.getElementById('results').style.display='block';
+			document.getElementById('player').style.display='block';
+			document.getElementById("compareResults").style.display='none';
+			document.getElementById('stats').style.display='none';
+			document.getElementById('search').style.display='none';
+			
+			var text = "<form class='form-inline'><select id='teamList' class='form-control'>";
+			text+= "<option selected disabled>Choose Player's Team</option>";
+    		for (i=0;i<nflTeams.length;i++){
+    			text += ("<option value="+nflAbb[i]+">" + nflTeams[i] + "</option>");
+   			}
+   			text += "</select> ";
+   			
+   			text += "<input type='number' class='form-control' id='playernumber' value='' placeholder='Player #'></input> ";
+   			
+   			text += "<select class='form-control' id='playerPosition' onselect='loadStatFields()'>";
+   			text += "<option selected disabled>Choose Stat</option>";
+   			text += "<option value='pass'>Passing</option>";
+   			text += "<option value='rush'>Rushing</option>";
+   			text += "<option value='rec'>Receiving</option>";
+   			text += "<option value='def'>Defence</option>";
+   			text += "<option value='kick'>Kicking</option>";
+   			text += "</select> ";
+   			
+   			text += "<button type='button' class='btn btn-info' onclick='loadStatFields()'><span class='glyphicon glyphicon-share-alt'></span> Load Stats</button></form>";
+   			text += "<div id='statfields'></div>";
+   			
+   			
+			
+			document.getElementById("player").innerHTML = text;
+			
+		};
+		
+		function loadStatFields() {
+			document.getElementById('stats').style.display='block';
+			var position = document.getElementById("playerPosition").value;
+			var text = "<br><br><form class='form-inline text-center'>";
+			switch (position) {
+				case ("pass"):
+					text += "<input class='form-control' type='number' id='attempts' value='' placeholder='Attempts'></input> "; //UPDATE ATTEMPTS
+					text += "<input class='form-control' type='number' id='completions' value='' placeholder='Completions'></input> "; //UPDATE Comp.
+					text += "<input class='form-control' type='number' id='percentage' value='' placeholder='Comp. Percentage'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='yards' value='' placeholder='Yards'></input> "; //UPDATE YARDS
+					text += "<input class='form-control' type='number' id='ypa' value='' placeholder='Yards Per Attempt'></input> "; //UPDATE YPATTEMPTS
+					text += "<br><br><input class='form-control' type='number' id='tds' value='' placeholder='Touchdowns'></input> "; //UPDATE TDS
+					text += "<input class='form-control' type='number' id='ints' value='' placeholder='Interceptions'></input> "; //UPDATE TDS
+					text += "<input class='form-control' type='number' id='sacks' value='' placeholder='Sacked'></input> "; //UPDATE Sacks
+					text += "<input class='form-control' type='number' id='rating' value='' placeholder='Passer Rating'></input> "; //UPDATE Rating
+					break;
+					
+				case "rush":
+					text += "<input class='form-control' type='number' id='attempts' value='' placeholder='Carries'></input> "; //UPDATE ATTEMPTS
+					text += "<input class='form-control' type='number' id='yards' value='' placeholder='Yards'></input> "; //UPDATE YARDS
+					text += "<input class='form-control' type='number' id='avg' value='' placeholder='Yards Per Carry'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='ypg' value='' placeholder='Yards Per Game'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='long' value='' placeholder='Longest Run'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='tds' value='' placeholder='Touchdowns'></input> "; //UPDATE PCT.
+					text += "<br><br><input class='form-control' type='number' id='fumbles' value='' placeholder='Fumbles'></input> "; //UPDATE PCT.
+					break;
+					
+				case "rec":
+					text += "<input class='form-control' type='number' id='receptions' value='' placeholder='Receptions'></input> "; //UPDATE ATTEMPTS
+					text += "<input class='form-control' type='number' id='yards' value='' placeholder='Yards'></input> "; //UPDATE YARDS
+					text += "<input class='form-control' type='number' id='avg' value='' placeholder='Yards Per Reception'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='ypg' value='' placeholder='Yards Per Game'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='tds' value='' placeholder='Touchdowns'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='long' value='' placeholder='Longest Reception'></input> "; //UPDATE PCT.
+					text += "<br><br><input class='form-control' type='number' id='fumbles' value='' placeholder='Fumbles'></input> "; //UPDATE PCT.
+					break;
+					
+				case "def":
+					text += "<input class='form-control' type='number' id='tackles' value='' placeholder='Tackles'></input> "; //UPDATE ATTEMPTS
+					text += "<input class='form-control' type='number' id='atackles' value='' placeholder='Assisted Tackles'></input> "; //UPDATE YARDS
+					text += "<input class='form-control' type='number' id='ints' value='' placeholder='Interceptions'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='intYards' value='' placeholder='Interception Yards'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='tds' value='' placeholder='Touchdowns'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='sack' value='' placeholder='Sacks'></input> "; //UPDATE PCT.
+					text += "<br><br><input class='form-control' type='number' id='ffumbles' value='' placeholder='Forced Fumbles'></input> "; //UPDATE PCT.
+					break;
+					
+				case "kick":
+					text += "<input class='form-control' type='number' id='pct' value='' placeholder='Percentage'></input> "; //UPDATE ATTEMPTS
+					text += "<input class='form-control' type='number' id='pat' value='' placeholder='Points After Touchdown'></input> "; //UPDATE YARDS
+					text += "<input class='form-control' type='number' id='fgs' value='' placeholder='Field Goals'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='xshort' value='' placeholder='0-19 Yds'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='short' value='' placeholder='20-29 Yds'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='med' value='' placeholder='30-39 Yds'></input> "; //UPDATE PCT.
+					text += "<br><br><input class='form-control' type='number' id='long' value='' placeholder='40-49 Yds'></input> "; //UPDATE PCT.
+					text += "<input class='form-control' type='number' id='xlong' value='' placeholder='50+ Yds'></input> "; //UPDATE PCT.
+					break;
+				
+			}
+			
+			text += "<br><br><button type='button' class='btn btn-info' onclick= 'updatePlayer()'><span class='glyphicon glyphicon-share-alt'></span>  Update Stats!</button></form>";
+			document.getElementById("stats").innerHTML = text;
+		}
+	
+		function loadSchedule(){
+		document.getElementById('search').style.display='none';
+		document.getElementById('ten').style.display='none';
+		document.getElementById('player').style.display='none';
+		document.getElementById('results').style.display='block';
+		document.getElementById('gamelists').style.display='block';
+		document.getElementById("compareResults").style.display='none';
+		document.getElementById('stats').style.display='none';
+		
+		var text = "<form class='form-inline'> <select id='teamSched' class='form-control'>";
+		text+= "<option selected disabled>Choose Team</option>";
+    	for (i=0;i<nflTeams.length;i++){
+    		text += ("<option value="+nflAbb[i]+">" + nflTeams[i] + "</option>");
+   		}
+   		text += "</select> ";
+   		text += "<button type='button' class='btn btn-info' onclick='getSchedule()'><span class='glyphicon glyphicon-share-alt'></span>  Get Schedule</button> </form>";
+   		document.getElementById('gamelists').innerHTML = text;
+		};
+		
+		function getSchedule(){
+			var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange=function() {
+    			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+     				 document.getElementById("results").innerHTML=xmlhttp.responseText;
+    			}
+  			}
+  			xmlhttp.open("GET","test.php?q=schedule&t="+document.getElementById("teamSched").value,true);
+  			xmlhttp.send();
+		};
+		
+		function loadRoster(){
+		document.getElementById('search').style.display='none';
+		document.getElementById('ten').style.display='none';
+		document.getElementById('player').style.display='none';
+		document.getElementById('results').style.display='block';
+		document.getElementById('gamelists').style.display='block';
+		document.getElementById("compareResults").style.display='none';
+		document.getElementById('stats').style.display='none';
+		
+		var text = "<form class='form-inline'> <select id='teamRoster' class='form-control'>";
+		text+= "<option selected disabled>Choose Team</option>";
+    	for (i=0;i<nflTeams.length;i++){
+    		text += ("<option value="+nflAbb[i]+">" + nflTeams[i] + "</option>");
+   		}
+   		text += "</select> ";
+   		text += "<button type='button' class='btn btn-info' onclick='getRoster()'><span class='glyphicon glyphicon-share-alt'></span>  Get Roster</button></form>";
+   		document.getElementById('gamelists').innerHTML = text;
+		};
+		
+		function getRoster(){
+			var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange=function() {
+    			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+     				 document.getElementById("results").innerHTML=xmlhttp.responseText;
+    			}
+  			}
+  			xmlhttp.open("GET","test.php?q=roster&t="+document.getElementById("teamRoster").value,true);
+  			xmlhttp.send();
+		};
+		
+		function loadStandings(){
+			document.getElementById('search').style.display='none';
+			document.getElementById('ten').style.display='none';
+			document.getElementById('player').style.display='none';
+			document.getElementById('results').style.display='block';
+			document.getElementById('gamelists').style.display='block';
+			document.getElementById("compareResults").style.display='none';
+			document.getElementById('stats').style.display='none';
+			 
+			var text = "<form class='form-inline'> <select id='standingConf' class='form-control'>"+
+					"<option value='' selected disabled>Choose here</option>" +
+					"<option value='NFC'>NFC</option><option value='AFC'>AFC</option></select> ";	
+			text+= "<button type='button' class='btn btn-info' onclick='getStandings()'><span class='glyphicon glyphicon-share-alt'></span>  Get Standings</button></form>";
+			document.getElementById('gamelists').innerHTML = text;
+		};
+		
+		function getStandings(){
+			var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange=function() {
+    			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+     				 document.getElementById("results").innerHTML=xmlhttp.responseText;
+    			}
+  			}
+  			xmlhttp.open("GET","test.php?q=standings&c="+document.getElementById("standingConf").value,true);
+  			xmlhttp.send();			
+		
+		};
+		
+		function loadCompareTeams() {
+			document.getElementById('gamelists').style.display='none';
+			document.getElementById('ten').style.display='none';
+			document.getElementById('results').style.display='block';
+			document.getElementById('player').style.display='block';
+			document.getElementById('stats').style.display='none';
+			document.getElementById('search').style.display='none';
+			document.getElementById('compareResults').style.display='block';
+	
+			
+			var text = "<form class='form-inline'><select id='teamOne' class='form-control'>";
+			text+= "<option selected disabled>Choose First Team</option>";
+    		for (i=0;i<nflTeams.length;i++){
+    			text += ("<option value="+nflAbb[i]+">" + nflTeams[i] + "</option>");
+   			}
+   			text += "</select> ";
+   			
+   			text += "<select id='teamTwo' class='form-control'>";
+			text+= "<option selected disabled>Choose Second Team</option>";
+    		for (i=0;i<nflTeams.length;i++){
+    			text += ("<option value="+nflAbb[i]+">" + nflTeams[i] + "</option>");
+   			}
+   			text += "</select> ";
+   			
+   			text += "<button type='button' class='btn btn-info' onclick='compareTeams()'><span class='glyphicon glyphicon-share-alt'></span>  Compare</button></form>";
+			
+			document.getElementById("player").innerHTML = text;
+		}
+		
+		function compareTeams() {
+			var xmlhttp=new XMLHttpRequest();
+			xmlhttp.onreadystatechange=function() {
+    			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+    				document.getElementById("results").style.display='none';
+     				document.getElementById("compareResults").innerHTML= xmlhttp.responseText;
+     				
+    			}
+  			}
+  			
+  			var query = "test.php?q=compare";
+  			query += "&t1="+document.getElementById("teamOne").value;
+  			query += "&t2="+document.getElementById("teamTwo").value;
+  			
+  			xmlhttp.open("GET",query,true);
+  			xmlhttp.send();
+		}
+		
+</script>
+	</head>
+<html>
+	<body onload="loadLists()">
+		<div class='container'>
+		<div class='jumbotron'>
+			<h1 class="text-center standout"><strong><span class="label label-success">NFL Stat Mania: 2014</span></strong></h1>
+		</div>
+		<div id='navBar' class='text-center'>
+			<button class='btn btn-default' onclick='loadLists()'><span class="glyphicon glyphicon-home"></span> Home</button>
+			<button class='btn btn-primary' onclick='displaySearch()'><span class="glyphicon glyphicon-search"></span>  Search</button>
+			<button class='btn btn-primary' onclick='displayLeaders()'><span class="glyphicon glyphicon-star"></span> Top Ten Stats</button>
+			<button class='btn btn-primary' onclick='loadSchedule()'><span class="glyphicon glyphicon-calendar"></span>  Schedules</button>
+			<button class='btn btn-primary' onclick='loadRoster()'><span class="glyphicon glyphicon-user"></span>  Rosters</button>
+			<button class='btn btn-primary' onclick='loadStandings()'><span class="glyphicon glyphicon-th-list"></span>  Standings</button>
+			<button class='btn btn-primary' onclick='displayAddGame()'><span class="glyphicon glyphicon-plus-sign"></span>  Add A Game</button>
+			<button class='btn btn-primary' onclick='loadUpdatePlayer()'><span class="glyphicon glyphicon-refresh"></span>  Update a Player</button>
+			<button class='btn btn-primary' onclick='loadCompareTeams()'><span class="glyphicon glyphicon-adjust"></span>  Compare Teams</button>
+			<br><br>
+		</div>
+		<div id='search' class='text-center'>
+			<form class="form-inline">
+				<div class='input-group'>
+					<input id='searchString' type='text' placeholder='Search Here' value='' class='form-control'></input>
+				</div>
+					<button type='button' class='btn btn-info' onclick='searchPlayer()'><span class="glyphicon glyphicon-search"></span>  Click To Search Player</button>
+					<button type='button' class='btn btn-info' onclick='searchTeam()'><span class="glyphicon glyphicon-search"></span>  Click To Search Team</button>
+			</form>
+		</div>
+		<div id='ten' class='text-center'>
+			<form class='form-inline'>
+				<select id='topTen' class='form-control'>
+					<option value='' selected disabled>Choose here</option>
+					<option value='passing'>Passing</option>
+					<option value='rushing'>Rushing</option>
+					<option value='receiving'>Receiving</option>
+					<option value='defence-tck'>Defence - Tackles</option>
+					<option value='defence-int'>Defence - Interceptions</option>
+					<option value='defence-sck'>Defence - Sacks</option>
+					<option value='kicking'>Kicking</option>
+				</select>
+			<button type='button' class='btn btn-info' onclick='loadLeaders()'><span class="glyphicon glyphicon-share-alt"></span>  Look Up Stats</button>
+			</form>
+		</div>
+		<div id= 'player' class='text-center'></div>
+		<div id= 'stats'></div>
+		<div id='gamelists' class='text-center'>
+		</div>
+		<div id='results'>
+		</div>
+		<div id='compareResults' class='text-center'>
+		</div>
+		</div>
+	</body>
+</html>
